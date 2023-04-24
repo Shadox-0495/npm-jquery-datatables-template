@@ -1,8 +1,13 @@
 import React, { useMemo } from "react";
-import Table from "./components/table";
+import { useTable, Column } from "react-table";
 
-export default function App() {
-	const columns = useMemo(
+interface tableProps {
+	columns: readonly Column<Record<any, any>>[];
+	data: Array<Record<any, any>>;
+}
+
+export default function Table({ columns, data }: tableProps) {
+	/*const columns: any = useMemo(
 		() => [
 			{
 				Header: "Age",
@@ -133,7 +138,32 @@ export default function App() {
 			},
 		],
 		[]
-	);
+	);*/
 
-	return <Table columns={columns} data={data} />;
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
+	return (
+		<table {...getTableProps()}>
+			<thead>
+				{headerGroups.map((headerGroup: any) => (
+					<tr {...headerGroup.getHeaderGroupProps()}>
+						{headerGroup.headers.map((column: any) => (
+							<th {...column.getHeaderProps()}>{column.render("Header")}</th>
+						))}
+					</tr>
+				))}
+			</thead>
+			<tbody {...getTableBodyProps()}>
+				{rows.map((row: any) => {
+					prepareRow(row);
+					return (
+						<tr {...row.getRowProps()}>
+							{row.cells.map((cell: any) => {
+								return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+							})}
+						</tr>
+					);
+				})}
+			</tbody>
+		</table>
+	);
 }
