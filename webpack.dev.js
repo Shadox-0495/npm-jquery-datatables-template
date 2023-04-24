@@ -6,7 +6,6 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
-import chokidar from "chokidar";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,43 +25,10 @@ let plugins = fs.readdirSync(path.resolve(__dirname, "./src/ts/")).map((file) =>
 	});
 });
 
-plugins.push(
-	new webpack.ProvidePlugin({
-		$: "jquery",
-		jQuery: "jquery",
-	})
-);
-
+plugins.push(new webpack.ProvidePlugin({ $: "jquery", jQuery: "jquery" }));
 plugins.push(new CleanWebpackPlugin());
-plugins.push(
-	new Dotenv({
-		path: path.resolve(__dirname, `./.env.dev`),
-	})
-);
+plugins.push(new Dotenv({ path: path.resolve(__dirname, `./.env.dev`) }));
 plugins.push(new ESLintPlugin({ extensions: ["ts"] }));
-
-const fileObserver = chokidar.watch(path.resolve(__dirname, "./api"), { ignored: /^\./, persistent: true, awaitWriteFinish: true });
-const targetApiDir = path.resolve(__dirname, "./../php-www/ppi");
-
-fileObserver
-	.on("add", (path) => {
-		const fileName = path.replace(`${__dirname}`, "");
-		fs.copyFile(path, `${targetApiDir}${fileName}`, (err) => {
-			if (err) throw err;
-		});
-	})
-	.on("change", (path) => {
-		const fileName = path.replace(`${__dirname}`, "");
-		fs.copyFile(path, `${targetApiDir}${fileName}`, (err) => {
-			if (err) throw err;
-		});
-	})
-	.on("unlink", (path) => {
-		const fileName = path.replace(`${__dirname}`, "");
-		fs.unlink(`${targetApiDir}${fileName}`, (err) => {
-			if (err) throw err;
-		});
-	});
 
 export default {
 	mode: "development",
