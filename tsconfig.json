@@ -1,0 +1,20 @@
+{
+	"extends": "./tsconfig.path.json",
+	"compilerOptions": {
+		"strict": true,
+		"moduleResolution": "node",
+		"outDir": "./dist/",
+		"noImplicitAny": true,
+		"module": "es2022",
+		"target": "es2017",
+		"jsx": "react",
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"strictPropertyInitialization": false
+	}
+}
